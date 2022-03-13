@@ -27,7 +27,9 @@ If you are using Visual Studio Code, then install the following extension:
 - The array numbers inputed cannot over the Target number
 
 Recommended option:
+
 Target: `50`
+
 Array numbers: `5,40,81,45,20,22,30,41,22,9,32,25,18,17,9,10,40,28`
 
 
