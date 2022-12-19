@@ -8,7 +8,6 @@ pipeline {
 	stages {
     	stage("Preparing build new Image") {
             steps {
-                sh 'php --version'
                 echo "Running ${VERSION} on ${env.JENKINS_URL}"
                 echo "for branch: ${env.BRANCH_NAME}"
 				echo "commit message: ${env.GIT_COMMIT}"
