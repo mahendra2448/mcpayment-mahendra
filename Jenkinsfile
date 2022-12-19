@@ -1,5 +1,7 @@
 pipeline {
-	agent any
+    agent { 
+        dockerfile true 
+    }
   	environment { 
    		NAME = "test-project"
    		VERSION = "${env.BUILD_NUMBER}"
@@ -8,9 +10,8 @@ pipeline {
 	stages {
     	stage("Preparing build new Image") {
             steps {
-                echo "Running ${VERSION} on ${env.JENKINS_URL}"
-                echo "for branch: ${env.BRANCH_NAME}"
-				echo "commit message: ${env.GIT_COMMIT}"
+                echo "Running build #${VERSION} on ${env.JENKINS_URL}"
+                echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
                 sh 'docker build -t ${IMAGE} .'
 				sh 'docker push ${IMAGE}'
             }
