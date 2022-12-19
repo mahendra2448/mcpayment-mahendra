@@ -10,7 +10,6 @@ pipeline {
             steps {
                 sh 'php --version'
                 echo "Running ${VERSION} on ${env.JENKINS_URL}"
-                git branch: "${BRANCH}"
                 echo "for branch: ${env.BRANCH_NAME}"
 				echo "commit message: ${env.GIT_COMMIT}"
                 sh 'docker build -t ${IMAGE} .'
