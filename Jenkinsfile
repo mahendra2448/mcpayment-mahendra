@@ -16,14 +16,14 @@ pipeline {
 				sh 'docker push ${IMAGE}'
             }
         }
-		stage("Shutting down the previous Image") {
-			steps {
-				sh 'docker-compose down'
-			}
-		}
 		stage("Run the new Image") {
 			steps {
 				sh 'docker-compose up -d'
+			}
+		}
+		stage("Shutting down the previous Image") {
+			steps {
+				sh 'docker-compose down ${NAME}:${VERSION -1}'
 			}
 		}
 		stage("Remove previous Image") {
