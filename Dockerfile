@@ -8,7 +8,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 COPY . .
-RUN composer install --ignore-platform-reqs --no-scripts --no-dev --no-ansi --no-interaction --no-plugins --optimize-autoloader
+RUN composer update
 
 COPY .env.local .env
 RUN php artisan key:generate
