@@ -8,7 +8,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 COPY . .
-RUN composer update
+RUN composer install
 
 COPY .env.local .env
 RUN php artisan key:generate
