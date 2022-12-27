@@ -13,6 +13,8 @@ COPY . .
 RUN composer update
 
 COPY .env.local .env
+RUN touch database/database.sqlite
+
 RUN php artisan key:generate
 RUN php artisan migrate
 RUN php artisan --version
