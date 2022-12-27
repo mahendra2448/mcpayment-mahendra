@@ -12,7 +12,7 @@ pipeline {
                 echo "Running build #${VERSION} on ${env.JENKINS_URL}"
                 echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
                 sh 'docker build -t colmitra/${IMAGE} .'
-				sh 'sudo docker push colmitra/${IMAGE}'
+				sh 'docker push colmitra/${IMAGE}'
             }
         }
 		stage("Run the new Image") {
