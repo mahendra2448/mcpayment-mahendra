@@ -9,7 +9,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 COPY . .
-RUN composer install
+RUN composer update
 
 COPY .env.local .env
 RUN touch database/database.sqlite
@@ -19,4 +19,4 @@ RUN php artisan migrate
 RUN php artisan --version
 
 RUN ls -l
-RUN usermod -aG docker jenkins
+RUN docker --version
