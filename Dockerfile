@@ -8,6 +8,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 COPY . .
+RUN apt install -y unzip
 RUN composer install
 
 COPY .env.local .env
