@@ -1,7 +1,6 @@
 pipeline {
-    agent { 
-        dockerfile true 
-    }
+    agent any
+	
   	environment { 
    		NAME = "test-project"
    		VERSION = "${env.BUILD_NUMBER}"
