@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+	
   	environment { 
    		NAME = "test-project"
    		VERSION = "${env.BUILD_NUMBER}"
@@ -11,7 +11,6 @@ pipeline {
             steps {
                 echo "Running build #${VERSION} on ${env.JENKINS_URL}"
                 echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
-				sh 'docker login'
                 sh 'docker build -t ${IMAGE} .'
 				sh 'docker push ${IMAGE}'
             }
