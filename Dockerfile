@@ -19,4 +19,3 @@ RUN php artisan migrate
 RUN php artisan --version
 
 RUN ls -l
-RUN docker --version
