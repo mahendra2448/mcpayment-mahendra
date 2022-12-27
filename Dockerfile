@@ -9,7 +9,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 COPY . .
-RUN composer update
+RUN composer install
 
 COPY .env.local .env
 RUN touch database/database.sqlite
