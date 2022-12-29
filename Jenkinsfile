@@ -30,14 +30,13 @@ pipeline {
 		stage("Run the new Image as Container") {
 			steps {
 				sh "docker run -d -p 2022:8000 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"
-				sh "docker images"
 				sh "docker ps"
 			}
 		}
 		stage("Remove previous Image") {
 			steps {
 				sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}' | docker rmi colmitra/${PREV_IMAGE} -f || echo 'Nothing to remove, there are no previous image.'"
-				// sh "docker rmi colmitra/${PREV_IMAGE}"
+				sh "docker images"
 			}
 		}
         stage("Finishing...") {
