@@ -28,6 +28,7 @@ pipeline {
 		}
 		stage("Shutting down the previous Container") {
 			steps {
+				echo "Gak dulu bang..."
 				// sh "docker stop ${NAME}-${PREV_VERSION}"
 			}
 		}
