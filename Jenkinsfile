@@ -30,6 +30,7 @@ pipeline {
 		stage("Run the new Image as Container") {
 			steps {
 				sh "docker run -d -p 2022:8000 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"
+				sh "docker images"
 				sh "docker ps"
 			}
 		}
@@ -41,9 +42,7 @@ pipeline {
 		}
         stage("Finishing...") {
             steps {
-                sh "php artisan --version"
-				sh "php artisan optimize:clear"
-				sh "php artisan serve --port=2022"
+                echo "Done build"
             }
         }
 	}
