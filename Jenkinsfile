@@ -2,36 +2,37 @@ pipeline {
     agent any
 	
   	environment { 
+   		NAME = "test-project"
    		VERSION = "${env.BUILD_NUMBER}"
-   		NAME = "test-project-${VERSION}"
    		IMAGE = "${NAME}:${VERSION}"
+		PREV_BUILD = "${currentBuild.previousBuild.number}"
  	}
 	stages {
     	stage("Preparing build new Image") {
             steps {
-				echo "Previous build #${currentBuild.previousBuild.number}"
+				echo "Previous build was #${PREV_BUILD}"
                 echo "Running build #${VERSION} on ${env.JENKINS_URL}"
                 echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
 				withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "" ]) {
 					sh "docker build -t colmitra/${IMAGE} ."
-					sh "docker push colmitra/${NAME}"
+					sh "docker push colmitra/${IMAGE}"
 				}
             }
         }
-		stage("Run the new Image") {
+		stage("Run the new Image as Container") {
 			steps {
-				sh "docker run -d -p 2022:8000 colmitra/${NAME} --name ${NAME}"
+				sh "docker run -d -p 2022:8000 colmitra/${NAME} --name ${NAME}-${VERSION}"
 				sh "docker ps"
 			}
 		}
-		stage("Shutting down the previous Image") {
+		stage("Shutting down the previous Container") {
 			steps {
-				sh "docker stop ${NAME}:${VERSION -1}"
+				sh "docker stop ${NAME}-${PREV_BUILD}"
 			}
 		}
 		stage("Remove previous Image") {
 			steps {
-				sh "docker rmi ${NAME}:${VERSION -1}"
+				sh "docker rmi ${NAME}-${PREV_BUILD}"
 			}
 		}
         stage("Finishing...") {
