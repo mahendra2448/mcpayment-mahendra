@@ -11,6 +11,7 @@ pipeline {
             steps {
                 echo "Running build #${VERSION} on ${env.JENKINS_URL}"
                 echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
+				sh 'docker login -u "${env.DOCKER_UNAME}" -p "${env.DOCKER_PW}" docker.io'
                 sh 'docker build -t colmitra/${IMAGE} .'
 				sh 'docker push colmitra/${IMAGE}'
             }
