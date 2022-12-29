@@ -2,28 +2,25 @@ pipeline {
     agent any
 	
   	environment { 
-   		NAME = "test-project"
    		VERSION = "${env.BUILD_NUMBER}"
-   		IMAGE = "${NAME}:${VERSION}"
+   		NAME = "test-project-${VERSION}"
+   		IMAGE = "${NAME}:${NAME}"
  	}
 	stages {
     	stage("Preparing build new Image") {
             steps {
+				echo "Previous build #${previousBuild}"
                 echo "Running build #${VERSION} on ${env.JENKINS_URL}"
                 echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
 				withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "" ]) {
-					// sh "docker login -u $DOCKER_UNAME -p $DOCKER_PW"
 					sh "docker build -t colmitra/${IMAGE} ."
-					sh "docker push colmitra/${IMAGE}"
+					sh "docker push colmitra/${NAME}"
 				}
-				// sh "docker login -u ${env.DOCKER_UNAME} --password-stdin ${env.DOCKER_PW} docker.io"
-                // sh "docker build -t colmitra/${IMAGE} ."
-				// sh "docker push colmitra/${IMAGE}"
             }
         }
 		stage("Run the new Image") {
 			steps {
-				sh "docker run -d -p 2022:8000 colmitra/${IMAGE} --name ${IMAGE}"
+				sh "docker run -d -p 2022:8000 colmitra/${NAME} --name ${NAME}"
 				sh "docker ps"
 			}
 		}
