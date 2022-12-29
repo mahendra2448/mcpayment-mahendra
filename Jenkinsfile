@@ -23,12 +23,12 @@ pipeline {
 		}
 		stage("Shutting down the previous Image") {
 			steps {
-				sh 'docker-compose down ${NAME}:${VERSION -1}'
+				sh "docker-compose down ${NAME}:${VERSION -1}"
 			}
 		}
 		stage("Remove previous Image") {
 			steps {
-				sh 'docker rmi ${NAME}:${VERSION -1}'
+				sh "docker rmi ${NAME}:${VERSION -1}"
 			}
 		}
         stage("Finishing...") {
