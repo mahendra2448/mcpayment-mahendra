@@ -22,7 +22,7 @@ pipeline {
         }
 		stage("Run the new Image as Container") {
 			steps {
-				sh "docker run -d -p 2022:8000 colmitra/${NEW_IMAGE}"
+				sh "docker run -d -p 2022 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"
 				sh "docker ps"
 			}
 		}
