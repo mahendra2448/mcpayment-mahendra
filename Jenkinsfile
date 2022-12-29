@@ -9,7 +9,7 @@ pipeline {
 	stages {
     	stage("Preparing build new Image") {
             steps {
-				echo previousBuild()
+				echo currentBuild.previousBuild.number
                 echo "Running build #${VERSION} on ${env.JENKINS_URL}"
                 echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
 				withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "" ]) {
