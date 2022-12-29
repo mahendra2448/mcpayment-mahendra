@@ -21,12 +21,10 @@ pipeline {
             }
         }
 		stage("Shutting down the previous Container") {
-			when {
-				sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}'"
-			}
 			steps {
+				sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}' | docker stop ${NAME}-${PREV_VERSION} || echo 'Nothing to stop, container is not exists.'"
 				// echo "Gak dulu bang..."
-				sh "docker stop ${NAME}-${PREV_VERSION}"
+				// sh "docker stop ${NAME}-${PREV_VERSION}"
 			}
 		}
 		stage("Run the new Image as Container") {
@@ -36,11 +34,9 @@ pipeline {
 			}
 		}
 		stage("Remove previous Image") {
-			when {
-				sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}'"
-			}
 			steps {
-				sh "docker rmi colmitra/${PREV_IMAGE}"
+				sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}' | docker rmi colmitra/${PREV_IMAGE} || echo 'Nothing to remove, there are no previous image.'"
+				// sh "docker rmi colmitra/${PREV_IMAGE}"
 			}
 		}
         stage("Finishing...") {
