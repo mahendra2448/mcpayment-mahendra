@@ -23,7 +23,7 @@ pipeline {
 		stage("Shutting down the previous Container") {
 			steps {
 				// echo "Gak dulu bang..."
-				sh "docker stop colmitra/${PREV_IMAGE}"
+				sh "docker stop ${NAME}-${PREV_VERSION}"
 			}
 		}
 		stage("Run the new Image as Container") {
