@@ -20,21 +20,21 @@ pipeline {
 				}
             }
         }
-		stage("Run the new Image as Container") {
-			steps {
-				sh "docker run -d -p 2022 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"
-				sh "docker ps"
-			}
-		}
 		stage("Shutting down the previous Container") {
 			steps {
 				// echo "Gak dulu bang..."
 				sh "docker stop colmitra/${PREV_IMAGE}"
 			}
 		}
+		stage("Run the new Image as Container") {
+			steps {
+				sh "docker run -d -p 2022:8000 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"
+				sh "docker ps"
+			}
+		}
 		stage("Remove previous Image") {
 			steps {
-				sh "docker rmi colmitra/${PREV_IMAGE}"
+				sh "docker rm colmitra/${PREV_IMAGE}"
 			}
 		}
         stage("Finishing...") {

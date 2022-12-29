@@ -3,12 +3,11 @@ FROM php:7.4-fpm
 RUN apt update && apt install -y libzip-dev
 RUN docker-php-ext-install pdo pdo_mysql sockets zip
 
-# COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 
 WORKDIR /var/www/html
 COPY . .
-RUN composer update
+RUN composer install
 
 COPY .env.local .env
 RUN touch database/database.sqlite
