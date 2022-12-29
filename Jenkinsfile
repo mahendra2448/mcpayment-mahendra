@@ -22,8 +22,8 @@ pipeline {
         }
 		stage("Shutting down the previous Container") {
 			steps {
-				// echo "Gak dulu bang..."
-				sh "docker stop ${NAME}-${PREV_VERSION}"
+				echo "Gak dulu bang..."
+				// sh "docker stop ${NAME}-${PREV_VERSION}"
 			}
 		}
 		stage("Run the new Image as Container") {
