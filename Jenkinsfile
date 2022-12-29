@@ -22,13 +22,13 @@ pipeline {
         }
 		stage("Run the new Image as Container") {
 			steps {
-				sh "docker run -d -p 2022:8000 colmitra/${NEW_IMAGE} --name ${NAME}-${VERSION} --verbose"
+				sh "docker run -d -p 2022:8000 colmitra/${NEW_IMAGE}"
 				sh "docker ps"
 			}
 		}
 		stage("Shutting down the previous Container") {
 			steps {
-				sh "docker stop ${NAME}-${PREV_VERSION}"
+				// sh "docker stop ${NAME}-${PREV_VERSION}"
 			}
 		}
 		stage("Remove previous Image") {
