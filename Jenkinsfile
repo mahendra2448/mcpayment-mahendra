@@ -34,7 +34,7 @@ pipeline {
 		}
 		stage("Remove previous Image") {
 			steps {
-				sh "docker rm colmitra/${PREV_IMAGE}"
+				sh "docker rmi colmitra/${PREV_IMAGE}"
 			}
 		}
         stage("Finishing...") {
