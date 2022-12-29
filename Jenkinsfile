@@ -21,9 +21,12 @@ pipeline {
             }
         }
 		stage("Shutting down the previous Container") {
+			when {
+				sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}'"
+			}
 			steps {
-				echo "Gak dulu bang..."
-				// sh "docker stop ${NAME}-${PREV_VERSION}"
+				// echo "Gak dulu bang..."
+				sh "docker stop ${NAME}-${PREV_VERSION}"
 			}
 		}
 		stage("Run the new Image as Container") {
@@ -33,6 +36,9 @@ pipeline {
 			}
 		}
 		stage("Remove previous Image") {
+			when {
+				sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}'"
+			}
 			steps {
 				sh "docker rmi colmitra/${PREV_IMAGE}"
 			}
