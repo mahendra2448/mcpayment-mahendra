@@ -11,9 +11,14 @@ pipeline {
             steps {
                 echo "Running build #${VERSION} on ${env.JENKINS_URL}"
                 echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
-				sh "docker login -u ${env.DOCKER_UNAME} --password-stdin ${env.DOCKER_PW} docker.io"
-                sh "docker build -t colmitra/${IMAGE} ."
-				sh "docker push colmitra/${IMAGE}"
+				withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "docker.io" ]) {
+					// sh "docker login -u $DOCKER_UNAME -p $DOCKER_PW"
+					sh "docker build -t colmitra/${IMAGE} ."
+					sh "docker push colmitra/${IMAGE}"
+				}
+				// sh "docker login -u ${env.DOCKER_UNAME} --password-stdin ${env.DOCKER_PW} docker.io"
+                // sh "docker build -t colmitra/${IMAGE} ."
+				// sh "docker push colmitra/${IMAGE}"
             }
         }
 		stage("Run the new Image") {
