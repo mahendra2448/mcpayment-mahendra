@@ -18,7 +18,7 @@ pipeline {
                 echo "Now running build #${VERSION} on ${env.JENKINS_URL}"
                 echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
                 sh """
-				sed -i -e 's/local/production/g' .env.local
+				sed -i -e 's/local/development/g' .env.local
                 sed -i -e 's/app_url/$DEVMOBILEAPI/g' .env.local
                 """
 				withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "" ]) {
