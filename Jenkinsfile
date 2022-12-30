@@ -12,6 +12,21 @@ pipeline {
 		PREV_VERSION = "${currentBuild.previousBuild.number}"
  	}
 	stages {
+		stage("Shutting down the previous Container") {
+			steps {
+				sh "docker container ls -q --filter name=${NAME}* | docker stop $(docker container ls -q --filter name=${NAME}*) || echo 'Nothing to stop, container is not exists.'"
+				// sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}' | docker stop ${NAME}-${PREV_VERSION} || echo 'Nothing to stop, container is not exists.'"
+				// echo "Gak dulu bang..."
+				// sh "docker stop ${NAME}-${PREV_VERSION}"
+			}
+		}
+		stage("Remove previous Image") {
+			steps {
+				sh "docker images colmitra/${NAME}* | docker rmi colmitra/${NAME}* -f || echo 'Nothing to remove, there are no previous image.'"
+				// sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}' | docker rmi colmitra/${PREV_IMAGE} -f || echo 'Nothing to remove, there are no previous image.'"
+				sh "docker images"
+			}
+		}
     	stage("Preparing build new Image") {
             steps {
 				echo "Previous build was #${PREV_VERSION}"
@@ -27,22 +42,10 @@ pipeline {
 				}
             }
         }
-		stage("Shutting down the previous Container") {
-			steps {
-				sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}' | docker stop ${NAME}-${PREV_VERSION} || echo 'Nothing to stop, container is not exists.'"
-				// echo "Gak dulu bang..."
-				// sh "docker stop ${NAME}-${PREV_VERSION}"
-			}
-		}
 		stage("Run the new Image as Container") {
 			steps {
 				sh "docker run -d -p 2022:8000 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"
 				sh "docker ps"
-			}
-		}
-		stage("Remove previous Image") {
-			steps {
-				sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}' | docker rmi colmitra/${PREV_IMAGE} -f || echo 'Nothing to remove, there are no previous image.'"
 				sh "docker images"
 			}
 		}
