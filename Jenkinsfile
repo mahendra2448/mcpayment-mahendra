@@ -1,3 +1,6 @@
+// Additional env
+env.DEVMOBILEAPI= 'mobile-api-dev.colmitra.id'
+
 pipeline {
     agent any
 	
@@ -12,8 +15,12 @@ pipeline {
     	stage("Preparing build new Image") {
             steps {
 				echo "Previous build was #${PREV_VERSION}"
-                echo "Running build #${VERSION} on ${env.JENKINS_URL}"
+                echo "Now running build #${VERSION} on ${env.JENKINS_URL}"
                 echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
+                sh """
+				sed -i -e 's/local/production/g' .env.local
+                sed -i -e 's/app_url/$DEVMOBILEAPI/g' .env.local
+                """
 				withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "" ]) {
 					sh "docker build -t colmitra/${NEW_IMAGE} ."
 					sh "docker push colmitra/${NEW_IMAGE}"
