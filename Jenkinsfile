@@ -11,11 +11,12 @@ pipeline {
    		NEW_IMAGE = "${NAME}:${VERSION}"
 		PREV_IMAGE = "${NAME}:${currentBuild.previousBuild.number}"
 		PREV_VERSION = "${currentBuild.previousBuild.number}"
+		containers = sh(returnStdout: true, script: 'docker container ls -q --filter name=$NAME_SEARCH')
  	}
 	stages {
 		stage("Shutting down the previous Container") {
 			steps {
-				sh "docker container ls -q --filter 'name=$NAME_SEARCH' | docker stop '$(docker container ls -q --filter name=$NAME_SEARCH)' || echo 'Nothing to stop, container is not exists.'"
+				sh "$containers | docker stop $containers || echo 'Nothing to stop, container is not exists.'"
 				// sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}' | docker stop ${NAME}-${PREV_VERSION} || echo 'Nothing to stop, container is not exists.'"
 				// echo "Gak dulu bang..."
 				// sh "docker stop ${NAME}-${PREV_VERSION}"
