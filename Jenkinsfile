@@ -57,10 +57,10 @@ pipeline {
 						// 		echo 'Nothing to remove, there are no previous image.'
 						// 	}
 						imageTags.each { tag ->
-							echo "Tag: ${tag}"
+							echo "[Pake .each] Tag: ${tag}"
 						}
 						for (int i = 0; i < imageTags.size(); i++) {
-							echo "Tag: ${imageTags[i]}"
+							echo "[Pake for loop] Tag: ${imageTags[i]}"
 						}
 					// } catch (Exception e) {
 					// 	echo "Stage return an error, but we keep continue. ${e}"
