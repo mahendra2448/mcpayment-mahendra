@@ -15,36 +15,46 @@ pipeline {
 		stage("Shutting down the previous Container") {
 			steps {
 				script {
-					def containers = sh(returnStdout: true, script: "docker container ls -q --filter name=$NAME*")
-					if (containers) {
-						sh "docker stop ${containers}"
-						echo "Previous container stopped successfully."
-					} else {
-						echo 'Nothing to stop, container is not exists.'
+					try {
+						def containers = sh(returnStdout: true, script: "docker container ls -q --filter name=$NAME*")
+						if (containers) {
+							sh "docker stop ${containers}"
+							echo "Previous container stopped successfully."
+						} else {
+							echo 'Nothing to stop, container is not exists.'
+						}
+
+					} catch (Exception e) {
+						echo "Stage return an error, but we keep continue. ${e}"
 					}
 				}
 			}
 		}
     	stage("Preparing build new Image") {
             steps {
-				echo "Previous build was #${PREV_VERSION}"
-                echo "Now running build #${VERSION} on ${env.JENKINS_URL}"
-                echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
-                
-				sh """
-				sed -i -e 's/local/development/g' .env.local
-                sed -i -e 's/app_url/$DEVMOBILEAPI/g' .env.local
-                """
-				withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "" ]) {
-					sh "docker build -t colmitra/${NEW_IMAGE} ."
-					sh "docker push colmitra/${NEW_IMAGE}"
+				try {
+					echo "Previous build was #${PREV_VERSION}"
+					echo "Now running build #${VERSION} on ${env.JENKINS_URL}"
+					echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
+					
+					sh """
+					sed -i -e 's/local/development/g' .env.local
+					sed -i -e 's/app_url/$DEVMOBILEAPI/g' .env.local
+					"""
+					withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "" ]) {
+						sh "docker build -t colmitra/${NEW_IMAGE} ."
+						sh "docker push colmitra/${NEW_IMAGE}"
+					}
+
+				} catch (Exception e) {
+					echo "Stage return an error, but we keep continue. ${e}"
 				}
             }
         }
 		stage("Remove previous Image") {
 			steps {
 				script {
-					// try {
+					try {
 						def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
 						def imageTags = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
         				def tags = readJSON text: imageTags
@@ -63,17 +73,23 @@ pipeline {
 								echo 'Nothing to remove, there are no previous image.'
 							}
 						}
-					// } catch (Exception e) {
-					// 	echo "Stage return an error, but we keep continue. ${e}"
-					// }
+
+					} catch (Exception e) {
+						echo "Stage return an error, but we keep continue. ${e}"
+					}
 				}
 			}
 		}
 		stage("Run the new Image as Container") {
 			steps {
-				sh "docker run -d -p 2022:8000 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"
-				sh "docker ps"
-				sh "docker images"
+				try {
+					sh "docker run -d -p 2022:8000 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"
+					sh "docker ps"
+					sh "docker images"
+					
+				} catch (Exception e) {
+					echo "Stage return an error, but we keep continue. ${e}"
+				}
 			}
 		}
         stage("Finishing...") {
