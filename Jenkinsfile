@@ -61,9 +61,9 @@ pipeline {
 						// }
 						for (int i = 0; i < tags.size(); i++) {
 							tag = tags[i]
-							def toIntOrNull = { tag?.isInteger() ? tag.toInteger() : null }
+							newtag = tag.toInteger()
 
-							echo "[Pake for loop] Tag: ${tag} ${VERSION} ${toIntOrNull}"
+							echo "[Pake for loop] Tag: ${tag} ${VERSION} ${newtag}"
 							
 							if (tag < VERSION) {
 								echo "Keren, dapet nih tag-nya: ${tag}"
