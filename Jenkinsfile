@@ -62,10 +62,10 @@ pipeline {
 						for (int i = 0; i < tags.size(); i++) {
 							tag = tags[i]
 							newtag = tag.toInteger()
-
-							echo "[Pake for loop] Tag: ${tag} ${VERSION} ${newtag}"
+							thisBuild = VERSION.toInteger()
 							
-							if (tag < VERSION) {
+							echo "[Pake for loop] Tag: ${newtag} < ${thisBuild}"
+							if (newtag < thisBuild) {
 								echo "Keren, dapet nih tag-nya: ${tag}"
 								// sh "docker rmi 'colmitra/$NAME:${tag}' -f"
 								// sh "docker images"
