@@ -46,7 +46,7 @@ pipeline {
 					def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
 					def imageTags = sh(script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
 
-					${imageTags}.each { tag ->
+					for ${tag} in imageTags:
 						if (${tag} < $VERSION) {
 							echo "Keren, dapet nih tag-nya: ${tag}"
 							sh "docker rmi 'colmitra/$NAME:${tag}' -f"
@@ -54,7 +54,6 @@ pipeline {
 						} else {
 							echo 'Nothing to remove, there are no previous image.'
 						}
-					}
 				}
 			}
 		}
