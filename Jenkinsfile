@@ -62,8 +62,8 @@ pipeline {
 						for (int i = 0; i < tags.size(); i++) {
 							def tag = tags[i]
 							echo "[Pake for loop] Tag: ${tag} ${VERSION}"
-							
-							if (tag < VERSION) {
+
+							if (int(tag) < VERSION) {
 								echo "Keren, dapet nih tag-nya: ${tag}"
 								// sh "docker rmi 'colmitra/$NAME:${tag}' -f"
 								// sh "docker images"
