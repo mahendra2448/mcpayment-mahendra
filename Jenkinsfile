@@ -25,21 +25,6 @@ pipeline {
 				}
 			}
 		}
-		stage("Remove previous Image") {
-			steps {
-				script {
-					def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
-					def imageTag = sh(script: "docker images 'colmitra/$NAME*' --format='{{.Tag}}'")
-					if (images) {
-						echo "Keren, dapet nih tag-nya: ${imageTag}"
-						sh "docker rmi ${images} -f"
-						sh "docker images"
-					} else {
-						echo 'Nothing to remove, there are no previous image.'
-					}
-				}
-			}
-		}
     	stage("Preparing build new Image") {
             steps {
 				echo "Previous build was #${PREV_VERSION}"
@@ -55,6 +40,23 @@ pipeline {
 				}
             }
         }
+		stage("Remove previous Image") {
+			steps {
+				script {
+					def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
+					def imageTags = sh(script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
+
+					for tag in imageTags:
+						if (${tag} < $VERSION) {
+							echo "Keren, dapet nih tag-nya: ${tag}"
+							sh "docker rmi ${images} -f"
+							sh "docker images"
+						} else {
+							echo 'Nothing to remove, there are no previous image.'
+						}
+				}
+			}
+		}
 		stage("Run the new Image as Container") {
 			steps {
 				sh "docker run -d -p 2022:8000 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"

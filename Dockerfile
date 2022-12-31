@@ -2,6 +2,7 @@ FROM php:7.4-fpm
 
 RUN apt update && apt install -y libzip-dev
 RUN docker-php-ext-install pdo pdo_mysql sockets zip
+RUN apt install jq -y
 
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 
