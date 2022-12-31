@@ -8,7 +8,7 @@ COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 
 WORKDIR /var/www/html
 COPY . .
-RUN composer install
+RUN composer update
 
 COPY .env.local .env
 

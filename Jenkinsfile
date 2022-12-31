@@ -57,7 +57,7 @@ pipeline {
 						// 	}
 						
 						for (int i = 0; i < ${imageTags}.size(); i++) {
-							bat "echo Tag: ${imageTags[i]}"
+							echo "echo Tag: ${imageTags[i]}"
 						}
 					} catch (Exception e) {
 						echo "Stage return an error, but we keep continue. ${e}"
