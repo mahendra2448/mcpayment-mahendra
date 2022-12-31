@@ -26,8 +26,15 @@ pipeline {
 		}
 		stage("Remove previous Image") {
 			steps {
-				sh "docker images colmitra/${NAME}* | docker rmi colmitra/${NAME}* -f || echo 'Nothing to remove, there are no previous image.'"
-				sh "docker images"
+				script {
+					def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
+					if (images) {
+						sh "docker rmi ${images} -f"
+						sh "docker images"
+					} else {
+						echo 'Nothing to remove, there are no previous image.'
+					}
+				}
 			}
 		}
     	stage("Preparing build new Image") {
