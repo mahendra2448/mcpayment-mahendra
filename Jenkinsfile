@@ -48,17 +48,19 @@ pipeline {
 						def imageTags = sh(script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
 
 						echo "${imageTags}"
-						for tag in imageTags:
-							if (${tag} < $VERSION) {
-								echo "Keren, dapet nih tag-nya: ${tag}"
-								// sh "docker rmi 'colmitra/$NAME:${tag}' -f"
-								// sh "docker images"
-							} else {
-								echo 'Nothing to remove, there are no previous image.'
-							}
-
+						// for tag in imageTags:
+						// 	if (${tag} < $VERSION) {
+						// 		echo "Keren, dapet nih tag-nya: ${tag}"
+						// 		// sh "docker rmi 'colmitra/$NAME:${tag}' -f"
+						// 		// sh "docker images"
+						// 	} else {
+						// 		echo 'Nothing to remove, there are no previous image.'
+						// 	}
+						imageTags.each { tag ->
+							echo "Tag: ${tag}"
+						}
 						for (int i = 0; i < len(imageTags); i++) {
-							echo "echo Tag: ${imageTags[i]}"
+							echo "Tag: ${imageTags[i]}"
 						}
 					// } catch (Exception e) {
 					// 	echo "Stage return an error, but we keep continue. ${e}"
