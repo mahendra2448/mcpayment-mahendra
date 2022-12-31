@@ -30,4 +30,4 @@ RUN php artisan migrate
 RUN php artisan --version
 
 RUN ls -l
-CMD ["php", "artisan", "serve", "--host", "0.0.0.0", "--port=2022"]
+CMD ["php", "artisan", "serve", "--host", "0.0.0.0"]
