@@ -46,7 +46,7 @@ pipeline {
 					// try {
 						def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
 						def imageTags = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
-        				def tag = readJSON text: jsonString
+        				def tag = readJSON text: imageTags
 
 						echo "${tag}"
 						// for tag in imageTags:
