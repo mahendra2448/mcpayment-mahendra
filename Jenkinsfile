@@ -56,11 +56,11 @@ pipeline {
 						// 		echo 'Nothing to remove, there are no previous image.'
 						// 	}
 						
-						for (int i = 0; i < imageTags.size(); i++) {
+						for (int i = 0; i < ${imageTags}.size(); i++) {
 							bat "echo Tag: ${imageTags[i]}"
 						}
 					} catch (Exception e) {
-						echo 'Stage return an error, but we keep continue.'
+						echo "Stage return an error, but we keep continue. ${e}"
 					}
 				}
 			}
