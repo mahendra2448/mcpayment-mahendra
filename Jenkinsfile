@@ -30,14 +30,15 @@ pipeline {
 				echo "Previous build was #${PREV_VERSION}"
                 echo "Now running build #${VERSION} on ${env.JENKINS_URL}"
                 echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
-                sh """
+                
+				sh """
 				sed -i -e 's/local/development/g' .env.local
                 sed -i -e 's/app_url/$DEVMOBILEAPI/g' .env.local
                 """
-				// withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "" ]) {
-				// 	sh "docker build -t colmitra/${NEW_IMAGE} ."
-				// 	sh "docker push colmitra/${NEW_IMAGE}"
-				// }
+				withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "" ]) {
+					sh "docker build -t colmitra/${NEW_IMAGE} ."
+					sh "docker push colmitra/${NEW_IMAGE}"
+				}
             }
         }
 		stage("Remove previous Image") {
