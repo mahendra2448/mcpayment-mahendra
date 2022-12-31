@@ -43,7 +43,7 @@ pipeline {
 		stage("Remove previous Image") {
 			steps {
 				script {
-					try {
+					// try {
 						def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
 						def imageTags = sh(script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
 
@@ -56,12 +56,12 @@ pipeline {
 						// 		echo 'Nothing to remove, there are no previous image.'
 						// 	}
 						
-						for (int i = 0; i < ${imageTags}.size(); i++) {
+						for (int i = 0; i < imageTags.size(); i++) {
 							echo "echo Tag: ${imageTags[i]}"
 						}
-					} catch (Exception e) {
-						echo "Stage return an error, but we keep continue. ${e}"
-					}
+					// } catch (Exception e) {
+					// 	echo "Stage return an error, but we keep continue. ${e}"
+					// }
 				}
 			}
 		}
