@@ -60,8 +60,10 @@ pipeline {
 						// 	echo "[Pake .each] Tag: ${tag}"
 						// }
 						for (int i = 0; i < tags.size(); i++) {
-							 tag = tags[i]
-							echo "[Pake for loop] Tag: ${tag} ${VERSION}"
+							tag = tags[i]
+							def toIntOrNull = { tag?.isInteger() ? tag.toInteger() : null }
+
+							echo "[Pake for loop] Tag: ${tag} ${VERSION} ${toIntOrNull}"
 							
 							if (tag < VERSION) {
 								echo "Keren, dapet nih tag-nya: ${tag}"
