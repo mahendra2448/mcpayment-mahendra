@@ -44,7 +44,7 @@ pipeline {
 				script {
 					def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
 					def imageTag = sh(script: "docker images 'colmitra/$NAME*' --format='{{.Tag}}'")
-					if (images and imageTag < $VERSION ) {
+					if (imageTag < $VERSION) {
 						echo "Keren, dapet nih tag-nya: ${imageTag}"
 						sh "docker rmi ${images} -f"
 						sh "docker images"
