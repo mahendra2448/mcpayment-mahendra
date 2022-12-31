@@ -46,7 +46,7 @@ pipeline {
 					// try {
 						def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
 						def imageTags = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
-        				def tag = readJSON text: imageTags
+        				def tags = readJSON text: imageTags
 
 						// for tag in imageTags:
 						// 	if (${tag} < $VERSION) {
@@ -59,10 +59,11 @@ pipeline {
 						// imageTags.each { tag ->
 						// 	echo "[Pake .each] Tag: ${tag}"
 						// }
-						for (int i = 0; i < tag.size(); i++) {
-							// echo "[Pake for loop] Tag: ${tag[i]}"
-							if (${tag[i]} < $VERSION) {
-								echo "Keren, dapet nih tag-nya: ${tag[i]}"
+						for (int i = 0; i < tags.size(); i++) {
+							// echo "[Pake for loop] Tag: ${tags[i]}"
+							def tag = ${tag[i]}
+							if (tag < $VERSION) {
+								echo "Keren, dapet nih tag-nya: ${tag}"
 								// sh "docker rmi 'colmitra/$NAME:${tag}' -f"
 								// sh "docker images"
 							} else {
