@@ -18,8 +18,24 @@ pipeline {
 					def containers = sh(returnStdout: true, script: "docker container ls -q --filter name=$NAME*")
 					if (containers) {
 						sh "docker stop ${containers}"
+						echo "Previous container stopped successfully."
 					} else {
 						echo 'Nothing to stop, container is not exists.'
+					}
+				}
+			}
+		}
+		stage("Remove previous Image") {
+			steps {
+				script {
+					def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
+					def imageTag = sh(script: "docker images 'colmitra/$NAME*' --format='{{.Tag}}'")
+					if (images) {
+						echo "Keren, dapet nih tag-nya: ${imageTag}"
+						sh "docker rmi ${images} -f"
+						sh "docker images"
+					} else {
+						echo 'Nothing to remove, there are no previous image.'
 					}
 				}
 			}
@@ -39,21 +55,6 @@ pipeline {
 				}
             }
         }
-		stage("Remove previous Image") {
-			steps {
-				script {
-					def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
-					def imageTag = sh(script: "docker images 'colmitra/$NAME*' --format='{{.Tag}}'")
-					if (imageTag < $VERSION) {
-						echo "Keren, dapet nih tag-nya: ${imageTag}"
-						sh "docker rmi ${images} -f"
-						sh "docker images"
-					} else {
-						echo 'Nothing to remove, there are no previous image.'
-					}
-				}
-			}
-		}
 		stage("Run the new Image as Container") {
 			steps {
 				sh "docker run -d -p 2022:8000 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"
