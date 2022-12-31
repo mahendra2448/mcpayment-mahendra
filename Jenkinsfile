@@ -14,7 +14,9 @@ pipeline {
 	stages {
 		stage("Shutting down the previous Container") {
 			steps {
-				sh "docker container ls -q --filter 'name=${NAME}'* | docker stop $(docker container ls -q --filter 'name=${NAME}'*) || echo 'Nothing to stop, container is not exists.'"
+				sh """
+				docker container ls -q --filter 'name=${NAME}*' | docker stop $(docker container ls -q --filter 'name=${NAME}*') || echo 'Nothing to stop, container is not exists.'
+				"""
 				// sh "docker ps -qa --filter 'name=${NAME}-${PREV_VERSION}' | docker stop ${NAME}-${PREV_VERSION} || echo 'Nothing to stop, container is not exists.'"
 				// echo "Gak dulu bang..."
 				// sh "docker stop ${NAME}-${PREV_VERSION}"
