@@ -32,22 +32,17 @@ pipeline {
 		}
     	stage("Preparing build new Image") {
             steps {
-				try {
-					echo "Previous build was #${PREV_VERSION}"
-					echo "Now running build #${VERSION} on ${env.JENKINS_URL}"
-					echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
-					
-					sh """
-					sed -i -e 's/local/development/g' .env.local
-					sed -i -e 's/app_url/$DEVMOBILEAPI/g' .env.local
-					"""
-					withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "" ]) {
-						sh "docker build -t colmitra/${NEW_IMAGE} ."
-						sh "docker push colmitra/${NEW_IMAGE}"
-					}
-
-				} catch (Exception e) {
-					echo "Stage return an error, but we keep continue. ${e}"
+				echo "Previous build was #${PREV_VERSION}"
+				echo "Now running build #${VERSION} on ${env.JENKINS_URL}"
+				echo "For branch: ${env.BRANCH_NAME} with commit id: ${env.GIT_COMMIT}"
+				
+				sh """
+				sed -i -e 's/local/development/g' .env.local
+				sed -i -e 's/app_url/$DEVMOBILEAPI/g' .env.local
+				"""
+				withDockerRegistry([ credentialsId: 'dockerhub-colmitra', url: "" ]) {
+					sh "docker build -t colmitra/${NEW_IMAGE} ."
+					sh "docker push colmitra/${NEW_IMAGE}"
 				}
             }
         }
@@ -73,7 +68,7 @@ pipeline {
 								echo 'Nothing to remove, there are no previous image.'
 							}
 						}
-
+						
 					} catch (Exception e) {
 						echo "Stage return an error, but we keep continue. ${e}"
 					}
@@ -82,14 +77,9 @@ pipeline {
 		}
 		stage("Run the new Image as Container") {
 			steps {
-				try {
-					sh "docker run -d -p 2022:8000 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"
-					sh "docker ps"
-					sh "docker images"
-					
-				} catch (Exception e) {
-					echo "Stage return an error, but we keep continue. ${e}"
-				}
+				sh "docker run -d -p 2022:8000 --name=${NAME}-${VERSION} colmitra/${NEW_IMAGE}"
+				sh "docker ps"
+				sh "docker images"
 			}
 		}
         stage("Finishing...") {
