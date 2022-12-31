@@ -45,7 +45,7 @@ pipeline {
 				script {
 					// try {
 						def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
-						def imageTags = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
+						def imageTags = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --format='{{.Tag}}'")
 
 						echo "${imageTags}"
 						// for tag in imageTags:
