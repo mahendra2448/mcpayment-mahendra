@@ -60,9 +60,9 @@ pipeline {
 						// 	echo "[Pake .each] Tag: ${tag}"
 						// }
 						for (int i = 0; i < tags.size(); i++) {
-							def tag = tags[i] as int
+							def tag = tags[i].toInteger()
 							echo "[Pake for loop] Tag: ${tag} ${VERSION}"
-
+							
 							if (tag < VERSION) {
 								echo "Keren, dapet nih tag-nya: ${tag}"
 								// sh "docker rmi 'colmitra/$NAME:${tag}' -f"
