@@ -6,7 +6,7 @@ pipeline {
 	
   	environment { 
    		NAME = "test-project"
-		NAME_SEARCH = "test-project*"
+		NAME_SEARCH = "test-project\\*"
    		VERSION = "${env.BUILD_NUMBER}"
    		NEW_IMAGE = "${NAME}:${VERSION}"
 		PREV_IMAGE = "${NAME}:${currentBuild.previousBuild.number}"
