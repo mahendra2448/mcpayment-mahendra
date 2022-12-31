@@ -43,17 +43,25 @@ pipeline {
 		stage("Remove previous Image") {
 			steps {
 				script {
-					def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
-					def imageTags = sh(script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
+					try {
+						def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
+						def imageTags = sh(script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
 
-					for ${tag} in imageTags:
-						if (${tag} < $VERSION) {
-							echo "Keren, dapet nih tag-nya: ${tag}"
-							sh "docker rmi 'colmitra/$NAME:${tag}' -f"
-							sh "docker images"
-						} else {
-							echo 'Nothing to remove, there are no previous image.'
+						// for ${tag} in imageTags:
+						// 	if (${tag} < $VERSION) {
+						// 		echo "Keren, dapet nih tag-nya: ${tag}"
+						// 		sh "docker rmi 'colmitra/$NAME:${tag}' -f"
+						// 		sh "docker images"
+						// 	} else {
+						// 		echo 'Nothing to remove, there are no previous image.'
+						// 	}
+						
+						for (int i = 0; i < imageTags.size(); i++) {
+							bat "echo Tag: ${imageTags[i]}"
 						}
+					} catch (Exception e) {
+						echo 'Stage return an error, but we keep continue.'
+					}
 				}
 			}
 		}
