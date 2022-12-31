@@ -45,7 +45,7 @@ pipeline {
 				script {
 					// try {
 						def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
-						def imageTags = sh(script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
+						def imageTags[] = sh(script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
 
 						echo "${imageTags}"
 						// for tag in imageTags:
@@ -59,7 +59,7 @@ pipeline {
 						imageTags.each { tag ->
 							echo "Tag: ${tag}"
 						}
-						for (int i = 0; i < len(imageTags); i++) {
+						for (int i = 0; i < imageTags.size(); i++) {
 							echo "Tag: ${imageTags[i]}"
 						}
 					// } catch (Exception e) {
