@@ -48,7 +48,6 @@ pipeline {
 						def imageTags = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
         				def tag = readJSON text: imageTags
 
-						echo "${tag}"
 						// for tag in imageTags:
 						// 	if (${tag} < $VERSION) {
 						// 		echo "Keren, dapet nih tag-nya: ${tag}"
@@ -61,7 +60,14 @@ pipeline {
 						// 	echo "[Pake .each] Tag: ${tag}"
 						// }
 						for (int i = 0; i < tag.size(); i++) {
-							echo "[Pake for loop] Tag: ${tag[i]}"
+							// echo "[Pake for loop] Tag: ${tag[i]}"
+							if (${tag[i]} < $VERSION) {
+								echo "Keren, dapet nih tag-nya: ${tag[i]}"
+								// sh "docker rmi 'colmitra/$NAME:${tag}' -f"
+								// sh "docker images"
+							} else {
+								echo 'Nothing to remove, there are no previous image.'
+							}
 						}
 					// } catch (Exception e) {
 					// 	echo "Stage return an error, but we keep continue. ${e}"
