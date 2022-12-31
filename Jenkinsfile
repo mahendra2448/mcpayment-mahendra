@@ -47,15 +47,16 @@ pipeline {
 						def images = sh(returnStdout: true, script: "docker images 'colmitra/$NAME*' --quiet")
 						def imageTags = sh(script: "docker images 'colmitra/$NAME*' --format='{{json .Tag}}' | jq --slurp")
 
-						// for ${tag} in imageTags:
-						// 	if (${tag} < $VERSION) {
-						// 		echo "Keren, dapet nih tag-nya: ${tag}"
-						// 		sh "docker rmi 'colmitra/$NAME:${tag}' -f"
-						// 		sh "docker images"
-						// 	} else {
-						// 		echo 'Nothing to remove, there are no previous image.'
-						// 	}
-						
+						echo "${imageTags}"
+						for tag in imageTags:
+							if (${tag} < $VERSION) {
+								echo "Keren, dapet nih tag-nya: ${tag}"
+								// sh "docker rmi 'colmitra/$NAME:${tag}' -f"
+								// sh "docker images"
+							} else {
+								echo 'Nothing to remove, there are no previous image.'
+							}
+
 						for (int i = 0; i < len(imageTags); i++) {
 							echo "echo Tag: ${imageTags[i]}"
 						}
