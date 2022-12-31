@@ -11,7 +11,7 @@ pipeline {
    		NEW_IMAGE = "${NAME}:${VERSION}"
 		PREV_IMAGE = "${NAME}:${currentBuild.previousBuild.number}"
 		PREV_VERSION = "${currentBuild.previousBuild.number}"
-		containers = sh(returnStdout: true, script: 'docker container ls -q --filter name=$NAME_SEARCH')
+		containers = sh(returnStdout: true, script: "docker container ls -q --filter name=$NAME_SEARCH")
  	}
 	stages {
 		stage("Shutting down the previous Container") {
