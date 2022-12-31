@@ -56,7 +56,7 @@ pipeline {
 						// 		echo 'Nothing to remove, there are no previous image.'
 						// 	}
 						
-						for (int i = 0; i < imageTags.size(); i++) {
+						for (int i = 0; i < len(imageTags); i++) {
 							echo "echo Tag: ${imageTags[i]}"
 						}
 					// } catch (Exception e) {
