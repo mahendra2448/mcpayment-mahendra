@@ -60,7 +60,7 @@ pipeline {
 						// 	echo "[Pake .each] Tag: ${tag}"
 						// }
 						for (int i = 0; i < tags.size(); i++) {
-							int tag = tags[i] as Integer
+							def tag = tags[i] as int
 							echo "[Pake for loop] Tag: ${tag} ${VERSION}"
 
 							if (tag < VERSION) {
